@@ -1,0 +1,17 @@
+{
+  "name": "binary-signal",
+  "version": "1.0.0",
+  "description": "Binary signal generator",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "miguel.acosta1978@gmail.com",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^6.1.0",
+    "express": "^4.16.4",
+    "mongoose": "^5.3.10",
+    "morgan": "^1.9.1"
+  }
+}
