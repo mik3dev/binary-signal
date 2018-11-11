@@ -12,12 +12,11 @@ const timeframes = require('./commons/timeframes');
 
 const logger = require('morgan');
 const path = require('path');
+const config = require('./config');
 
-require('dotenv').load();
+const userRouter = require('./routes/user-route');
 
-const PORT = process.env.PORT || 3000;
-
-mongoose.connect(process.env.FX_DATABASE_URL, {
+mongoose.connect(config.FX_DATABASE_URL, {
     'useNewUrlParser': true
 }).then(
     () => console.log('Database connection is ready!'),
@@ -25,6 +24,10 @@ mongoose.connect(process.env.FX_DATABASE_URL, {
 );
 
 app.use(logger('dev'));
+app.use(express.json());
+
+app.use('/users', userRouter);
+
 app.get('/', (req, res) => {
     res.send('Hello World');
 });
@@ -42,11 +45,15 @@ io.on('connection', (socket) => {
             })
         })
         Promise.all(promises).then(r => socket.emit('SendFxData', r));
-    }, process.env.TIMER)
+    }, config.TIMER)
 });
 
 app.use(express.static(path.join(__dirname, 'public')));
+app.use((err, req, res, next) => {
+    console.log(err);
+    res.status(500).send('Something went wrong');
+})
 
-server.listen(PORT, () => {
-    console.log(`The server is running on port ${PORT}`);
+server.listen(config.PORT, () => {
+    console.log(`The server is running on port ${config.PORT}`);
 })

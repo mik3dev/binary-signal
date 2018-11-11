@@ -11,11 +11,14 @@
   "author": "miguel.acosta1978@gmail.com",
   "license": "ISC",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "dotenv": "^6.1.0",
     "express": "^4.16.4",
+    "jsonwebtoken": "^8.3.0",
     "lodash": "^4.17.11",
     "mongoose": "^5.3.10",
     "morgan": "^1.9.1",
-    "socket.io": "^2.1.1"
+    "socket.io": "^2.1.1",
+    "validator": "^10.9.0"
   }
 }
