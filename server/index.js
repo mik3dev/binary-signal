@@ -6,6 +6,9 @@ const socketIO = require('socket.io');
 const io = socketIO(server);
 const mongoose = require('mongoose');
 const Candle = require('./models/candle');
+const _ = require('lodash');
+const instruments = require('./commons/insturments');
+const timeframes = require('./commons/timeframes');
 
 const logger = require('morgan');
 const path = require('path');
@@ -27,7 +30,19 @@ app.get('/', (req, res) => {
 });
 
 io.on('connection', (socket) => {
-    console.log('User is connected');
+    setInterval( () => {
+        let promises = [];
+        _.forEach(instruments, instrument => {
+            _.forEach(timeframes, timeframe => {
+                promises.push(new Promise((resolve) => {
+                    Candle.findOne({instrument, timeframe})
+                        .sort({'time':-1})
+                        .then(r => resolve(r));
+                }));
+            })
+        })
+        Promise.all(promises).then(r => socket.emit('SendFxData', r));
+    }, process.env.TIMER)
 });
 
 app.use(express.static(path.join(__dirname, 'public')));

@@ -12,8 +12,8 @@
     <script src="/socket.io/socket.io.js"></script>
     <script>
         var socket = io();
-        socket.on('connect', ()=>{
-            console.log('Connected to server');
+        socket.on('SendFxData', function(fxData){
+            console.log(fxData)
         })
     </script>
 </body>
