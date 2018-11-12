@@ -27,10 +27,7 @@ app.use(logger('dev'));
 app.use(express.json());
 
 app.use('/users', userRouter);
-
-// app.get('/', (req, res) => {
-//     res.send('Hello World');
-// });
+app.use(express.static(path.join(__dirname, 'public')));
 
 io.on('connection', (socket) => {
     setInterval( () => {
@@ -48,11 +45,10 @@ io.on('connection', (socket) => {
     }, config.TIMER)
 });
 
-app.use(express.static(path.join(__dirname, 'public')));
-app.use((err, req, res, next) => {
-    console.log(err);
-    res.status(500).send('Something went wrong');
-})
+// app.use((err, req, res, next) => {
+//     console.log(err);
+//     res.status(500).send('Something went wrong');
+// })
 
 server.listen(config.PORT, () => {
     console.log(`The server is running on port ${config.PORT}`);
