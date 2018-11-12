@@ -14,7 +14,7 @@ const logger = require('morgan');
 const path = require('path');
 const config = require('./config');
 
-const userRouter = require('./routes/user-route');
+const userRouter = require('./routes/userRoutes');
 
 mongoose.connect(config.FX_DATABASE_URL, {
     'useNewUrlParser': true
@@ -28,9 +28,9 @@ app.use(express.json());
 
 app.use('/users', userRouter);
 
-app.get('/', (req, res) => {
-    res.send('Hello World');
-});
+// app.get('/', (req, res) => {
+//     res.send('Hello World');
+// });
 
 io.on('connection', (socket) => {
     setInterval( () => {

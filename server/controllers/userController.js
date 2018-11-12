@@ -25,7 +25,7 @@ userController = {
             })
     },
     findByToken(req, res) {
-        const token = req.headers('X-Auth');
+        const token = req.get('X-Auth');
         User.findByToken(token)
         .then(user => {
             if(!user){

@@ -49,7 +49,7 @@ const userSchema = new mongoose.Schema({
 
 userSchema.methods.toJSON = function(){
     const user = this;
-    return _.pick(user, ['_id', 'username', 'email']);
+    return _.pick(user, ['_id', 'username', 'email', 'isActive', 'isMaster']);
 }
 
 userSchema.methods.generateToken = function(){
