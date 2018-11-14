@@ -13,7 +13,8 @@ const timeframes = require('./commons/timeframes');
 const logger = require('morgan');
 const path = require('path');
 const config = require('./config');
-
+// cors = require('cors');
+// app.use(cors());
 const userRouter = require('./routes/userRoutes');
 
 mongoose.connect(config.FX_DATABASE_URL, {
@@ -44,6 +45,7 @@ io.on('connection', (socket) => {
         Promise.all(promises).then(r => socket.emit('SendFxData', r));
     }, config.TIMER)
 });
+
 
 // app.use((err, req, res, next) => {
 //     console.log(err);

@@ -53,6 +53,20 @@ userController = {
         }).catch(err => {
             res.status(401).send(`Usuario no registrado.`);
         })
+    },
+    showAll(req, res) {
+        const token = req.get('X-Auth');
+        User.findByToken(token)
+        .then(user => {
+            if(!user || !user.isMaster){
+                res.status(401).send('No tiene autorizacion para esta operacion');
+            }
+            User.find({}).then(users => {
+                res.send(users);
+            }).catch(err => res.status(401).send('Ups, algo salio mal'))
+        }).catch(err => {
+            res.status(401).send('Ups, algo salio mal');
+        })
     }
 }
 
