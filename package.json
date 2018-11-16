@@ -4,7 +4,7 @@
   "description": "Binary signal generator",
   "main": "index.js",
   "scripts": {
-    "start": "node ./server/index",
+    "start": "node index",
     "dev": "nodemon ./server/index",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
