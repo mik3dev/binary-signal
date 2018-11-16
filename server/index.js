@@ -10,11 +10,10 @@ const _ = require('lodash');
 const instruments = require('./commons/insturments');
 const timeframes = require('./commons/timeframes');
 
+const cors = require('cors')
 const logger = require('morgan');
 const path = require('path');
 const config = require('./config');
-// cors = require('cors');
-// app.use(cors());
 const userRouter = require('./routes/userRoutes');
 
 mongoose.connect(config.FX_DATABASE_URL, {
@@ -24,6 +23,7 @@ mongoose.connect(config.FX_DATABASE_URL, {
     err => console.log(`Ups, something went wrong. Can not connect to database. \n${err}`)
 );
 
+app.use(cors())
 app.use(logger('dev'));
 app.use(express.json());
 
@@ -42,14 +42,22 @@ io.on('connection', (socket) => {
                 }));
             })
         })
-        Promise.all(promises).then(r => socket.emit('SendFxData', r));
+        Promise.all(promises).then(r => socket.emit('fxData', r));
     }, config.TIMER)
 });
 
-
-// app.use((err, req, res, next) => {
-//     console.log(err);
-//     res.status(500).send('Something went wrong');
+// app.get('/instruments', (req, res) => {
+//     let promises = [];
+//     _.forEach(instruments, instrument => {
+//         _.forEach(timeframes, timeframe => {
+//             promises.push(new Promise((resolve) => {
+//                 Candle.findOne({instrument, timeframe})
+//                     .sort({'time':-1})
+//                     .then(r => resolve(r));
+//             }));
+//         })
+//     })
+//     Promise.all(promises).then(r => res.send(r));
 // })
 
 server.listen(config.PORT, () => {

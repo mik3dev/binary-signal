@@ -26,7 +26,8 @@ instruments = [
     'NZD_CAD',
     'AUD_CHF',
     'NZD_CHF',
-    'AUD_NZD'
+    'AUD_NZD',
+    'XAU_USD'
 ]
 
 module.exports = instruments;
