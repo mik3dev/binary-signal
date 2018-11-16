@@ -5,16 +5,16 @@ const server = http.createServer(app);
 const socketIO = require('socket.io');
 const io = socketIO(server);
 const mongoose = require('mongoose');
-const Candle = require('./models/candle');
+const Candle = require('./server/models/candle');
 const _ = require('lodash');
-const instruments = require('./commons/insturments');
-const timeframes = require('./commons/timeframes');
+const instruments = require('./server/commons/insturments');
+const timeframes = require('./server/commons/timeframes');
 
 const cors = require('cors')
 const logger = require('morgan');
 const path = require('path');
-const config = require('./config');
-const userRouter = require('./routes/userRoutes');
+const config = require('./server/config');
+const userRouter = require('./server/routes/userRoutes');
 
 mongoose.connect(config.FX_DATABASE_URL, {
     'useNewUrlParser': true
@@ -28,7 +28,7 @@ app.use(logger('dev'));
 app.use(express.json());
 
 app.use('/users', userRouter);
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, '/server/public')));
 
 io.on('connection', (socket) => {
     setInterval( () => {
