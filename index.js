@@ -1,18 +1,10 @@
 const express = require('express');
-const app = express();
-const http = require('http');
-const server = http.createServer(app);
-const socketIO = require('socket.io');
-const io = socketIO(server);
-const mongoose = require('mongoose');
-const Candle = require('./server/models/candle');
-const _ = require('lodash');
-const instruments = require('./server/commons/insturments');
-const timeframes = require('./server/commons/timeframes');
-
-const cors = require('cors')
 const logger = require('morgan');
 const path = require('path');
+const mongoose = require('mongoose');
+// const cors = require('cors')
+const _ = require('lodash');
+
 const config = require('./server/config');
 const userRouter = require('./server/routes/userRoutes');
 
@@ -23,43 +15,14 @@ mongoose.connect(config.FX_DATABASE_URL, {
     err => console.log(`Ups, something went wrong. Can not connect to database. \n${err}`)
 );
 
-app.use(cors())
-app.use(logger('dev'));
-app.use(express.json());
-
-app.use('/users', userRouter);
-app.use(express.static(path.join(__dirname, '/server/public')));
-
-io.on('connection', (socket) => {
-    setInterval( () => {
-        let promises = [];
-        _.forEach(instruments, instrument => {
-            _.forEach(timeframes, timeframe => {
-                promises.push(new Promise((resolve) => {
-                    Candle.findOne({instrument, timeframe})
-                        .sort({'time':-1})
-                        .then(r => resolve(r));
-                }));
-            })
-        })
-        Promise.all(promises).then(r => socket.emit('fxData', r));
-    }, config.TIMER)
-});
-
-// app.get('/instruments', (req, res) => {
-//     let promises = [];
-//     _.forEach(instruments, instrument => {
-//         _.forEach(timeframes, timeframe => {
-//             promises.push(new Promise((resolve) => {
-//                 Candle.findOne({instrument, timeframe})
-//                     .sort({'time':-1})
-//                     .then(r => resolve(r));
-//             }));
-//         })
-//     })
-//     Promise.all(promises).then(r => res.send(r));
-// })
-
-server.listen(config.PORT, () => {
-    console.log(`The server is running on port ${config.PORT}`);
-})
+express()
+    // .use(cors({
+    //     "origin": 'http://localhost:8080/'
+    // }))
+    .use(logger('dev'))
+    .use(express.json())
+    .use('/users', userRouter)
+    .use(express.static(path.join(__dirname, '/server/public')))
+    .listen(config.PORT, () => {
+        console.log(`The server is running on port ${config.PORT}`);
+    });
