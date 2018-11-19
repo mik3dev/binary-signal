@@ -23,6 +23,9 @@ express()
     .use(express.json())
     .use('/users', userRouter)
     .use(express.static(path.join(__dirname, '/server/public')))
+    .use(function (req, res, next) {
+        res.redirect('/');
+    })
     .listen(config.PORT, () => {
         console.log(`The server is running on port ${config.PORT}`);
     });
