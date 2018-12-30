@@ -6,11 +6,21 @@ const jwt = require('jsonwebtoken');
 const config = require('../config')
 
 const userSchema = new mongoose.Schema({
+    firstName: {
+        type: String,
+        maxlength: 120,
+        trim: true
+    },
+    lastName: {
+        type: String,
+        maxlength: 120,
+        trim: true
+    },
     username: {
         type: String,
         required: true,
         minlength: 2,
-        maxlength: 50,
+        maxlength: 120,
         unique: true,
         trim: true
     },
@@ -26,6 +36,11 @@ const userSchema = new mongoose.Schema({
             },
             message: '{VALUE} is not valid email'
         }
+    },
+    phone: {
+        type: String,
+        maxlength: 120,
+        trim: true
     },
     password: {
         type: String,
@@ -49,7 +64,7 @@ const userSchema = new mongoose.Schema({
 
 userSchema.methods.toJSON = function(){
     const user = this;
-    return _.pick(user, ['_id', 'username', 'email', 'isActive', 'isMaster']);
+    return _.pick(user, ['_id', 'username', 'email', 'firstName', 'lastName', 'phone','isActive', 'isMaster']);
 }
 
 userSchema.methods.generateToken = function(){

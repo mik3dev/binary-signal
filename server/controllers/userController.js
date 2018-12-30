@@ -10,7 +10,7 @@ userController = {
                     return Promise.reject();
                 }
                 if(user.isMaster === true){
-                    const newUser = new User(_.pick(req.body, ['username', 'email', 'password']));
+                    const newUser = new User(_.pick(req.body, ['username', 'email', 'password', 'firstName', 'lastName', 'phone']));
                     newUser.save()
                         .then(() => {
                             return newUser.generateToken();
@@ -63,6 +63,50 @@ userController = {
             }
             User.find({}).then(users => {
                 res.send(users);
+            }).catch(err => res.status(401).send('Ups, algo salio mal'))
+        }).catch(err => {
+            res.status(401).send('Ups, algo salio mal');
+        })
+    },
+    update(req, res){
+        const token = req.get('X-Auth')
+        User.findByToken(token)
+        .then(user => {
+            if(!user || !user.isMaster){
+                res.status(401).send('No tiene autorizacion para esta operacion');
+            }
+            User.findByIdAndUpdate(req.params.id, req.body.user).then(user => {
+                res.send(user);
+            }).catch(err => res.status(401).send('Ups, algo salio mal'))
+        }).catch(err => {
+            res.status(401).send('Ups, algo salio mal');
+        })
+    },
+    delete(req, res){
+        const token = req.get('X-Auth');
+        User.findByToken(token)
+        .then(user => {
+            if(!user || !user.isMaster){
+                res.status(401).send('No tiene autorizacion para esta operacion');
+            }
+            User.findByIdAndDelete(req.params.id).then(user => {
+                res.send(user);
+            }).catch(err => res.status(401).send('Ups, algo salio mal'))
+        }).catch(err => {
+            res.status(401).send('Ups, algo salio mal');
+        })
+    },
+    showUser(req, res){
+        const token = req.get('X-Auth');
+        const id = req.params.id;
+
+        User.findByToken(token)
+        .then(user => {
+            if(!user || !user.isMaster){
+                res.status(401).send('No tiene autorizacion para esta operacion');
+            }
+            User.findById(id).then(user => {
+                res.send(user);
             }).catch(err => res.status(401).send('Ups, algo salio mal'))
         }).catch(err => {
             res.status(401).send('Ups, algo salio mal');
